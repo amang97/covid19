@@ -1,6 +1,8 @@
 # File paths
 FP = {}
 FP['DATA'] = './../../../Desktop/mngo/research/covid19/COVID_machine_learning_project/Data_and_data_dictionary/5.29.2020/COVID19RiskFactors-raw data_2020.5.29.csv'
+FP['SVM_RBF'] = './saved_models/SVM/rbf.joblib'
+FP['SVM_LINEAR'] = './saved_models/SVM/linear.joblib'
 
 # Data set Parameters
 DP = {}
