@@ -4,7 +4,7 @@ from sklearn import svm
 
 from ..utilities.config import FP
 
-def SVM(X_tr, y_tr, X_t):
+def SVM(X_tr, y_tr):
     y_tr = np.ravel(y_tr.to_numpy())
 
     # Train an SVM classifier with RBF kernel, gamma selected automatically
