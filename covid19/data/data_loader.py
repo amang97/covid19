@@ -4,29 +4,28 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 class DataLoader:
-    def __init__(self):
+    def __init__(self, dfp):
         """ Input - None
         """
         super().__init__()
-        self.dfp = None     # Data file path
+        self.dfp = dfp      # Data file path
         self.data = None    # Initial load of the dataset
-        self.X = None       # data frame containing the selected features
-        self.y = None       # label column
+        # self.X = None       # data frame containing the selected features
+        # self.y = None       # label column
         self.sr = None      # split ratio
         self.seed = None    # seed value to reproduce results
 
     # Setter Functions
-    def read_data(self, dfp, fl=None, ll=None):
+    def read_data(self, fl=None, ll=None):
         """ Input -
                 dfp: (Path object) data file path to the dataset csv file
                 fl: (list of strings) feature column header names
                 ll: (list of strings) label column header name
                 default: features and label lists are empty
             Output -
-                None (sets the dfp and the data attributes)
-        """
-        self.dfp = dfp
-        
+                X: data frame containing the selected features
+                y: label column
+        """        
         # Handle none cases
         if fl is None:
             fl = []
@@ -34,12 +33,12 @@ class DataLoader:
             ll = []
         
         # Load data from CSV file
-        self.data = pd.read_csv(dfp, usecols=fl+ll).dropna()
-        self.X = self.data[fl]
-        self.y = self.data[ll]
-        return None
+        self.data = pd.read_csv(self.dfp, usecols=fl+ll).dropna()
+        X = self.data[fl]
+        y = self.data[ll]
+        return X, y
 
-    def stratified_split(self, sr, seed):
+    def stratified_split(self, X, y, sr, seed):
         """ Input -
                 sr: (float) split ratio % of test data
                 seed: (int)
@@ -52,9 +51,9 @@ class DataLoader:
         """
         self.sr = sr
         self.seed = seed
-        X_tr, X_t, y_tr, y_t = train_test_split(self.X, self.y,\
+        X_tr, X_t, y_tr, y_t = train_test_split(X, y,\
                                                 test_size = sr,\
                                                 random_state = seed,\
-                                                stratify=self.y)
+                                                stratify=y)
         return X_tr, X_t, y_tr, y_t
 
