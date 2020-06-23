@@ -1,5 +1,5 @@
 all:
-	python3 -m covid19
+	python3 -m covid19 --trainSVM --trainRF
 
 install-dependencies:
 	\
@@ -8,4 +8,7 @@ install-dependencies:
 
 svm:
 	python3 -m covid19 --trainSVM
+
+rf:
+	python3 -m covid19 --trainRF
 
