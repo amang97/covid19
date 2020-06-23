@@ -1,3 +1,4 @@
+import numpy as np
 from joblib import load
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
@@ -19,59 +20,76 @@ def main():
     # Load the data set
     X, y = dl.read_data(fl=(DP['CATFL']+ DP['CONFL']), ll=DP['LL'])
 
-    # # Stratified Splitting of the dataset
-    # X_tr, X_t, y_tr, y_t = dl.stratified_split(X, y, DP['SR'], DP['SEED'])
+    X_fs = X
+    if (args.dataAnalytics):
+        # instantiate data analytics
+        da = DataAnalytics(dl.data, X, y)
 
-    # instantiate data analytics
-    da = DataAnalytics(X, y)
+        print(f'Number of data points in class 1: {da.p_y()}')
+        print('\n---------------**********---------------\n')
 
-    X_fs, fs = da.select_features(DP['CATFL'], DP['CONFL'],\
-                                    k_cat=5, k_con=3,\
-                                    cat_mode='chi2',\
-                                    con_mode='anova_f')
-    print(fs)
-    print('\n---------------**********---------------\n')
+        print(f'Auto Correlation Matrix: {da.correlation_matrix()}')
+        print('\n---------------**********---------------\n')
+
+
+        print(f'SNR for numerical variables:\n')
+        print(da.s2nr(confl=DP['CONFL']))
+        print('\n---------------**********---------------\n')
+
+        X_fs, fs = da.select_features(DP['CATFL'], DP['CONFL'],\
+                                        k_cat=DP['NUM_CAT'],\
+                                        k_con=DP['NUM_CON'],\
+                                        cat_mode='chi2',\
+                                        con_mode='anova_f')
+        print(f'Selected Categorical Features:\n')
+        print(np.array(DP['CATFL'])[fs[0]])
+
+        print(f'\nSelected Numerical Features:')
+        print(np.array(DP['CONFL'])[fs[1]])
+        print('\n---------------**********---------------\n')
+
+        da.visualize(np.array(DP['CATFL'])[fs[0]], FP['CAT_GRAPH'])
+        da.visualize(np.array(DP['CONFL'])[fs[1]], FP['CON_GRAPH'])
+
+    # Stratified Splitting of the dataset
     X_tr, X_t, y_tr, y_t = dl.stratified_split(X_fs, y, DP['SR'], DP['SEED'])
 
-    # # Obtain analytics
-    # print(da.p_y())
-
     if (args.trainSVM):
-        SVM(X_tr, y_tr, 'linear', './saved_models/SVM/linear.joblib')
-        SVM(X_tr, y_tr, 'rbf', './saved_models/SVM/rbf.joblib')
+        SVM(X_tr, y_tr, 'rbf', FP['SVM_RBF'])
+        SVM(X_tr, y_tr, 'linear', FP['SVM_LINEAR'])
+
+        # Load Saved SVM models and evaluate model
+        rbf_svm_mdl = load(FP['SVM_RBF'])
+        y_p = rbf_svm_mdl.predict(X_t)
+        print(f'RBF Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
+        print(f'RBF Kernel SVM Precision: {precision_score(y_p, y_t)}')
+        print(f'RBF Kernel SVM Recall: {recall_score(y_p, y_t)}')
+        print(f'RBF Kernel SVM F1: {f1_score(y_p, y_t)}')
+        print('\n---------------**********---------------\n')
+
+        linear_svm_mdl = load(FP['SVM_LINEAR'])
+        y_p = linear_svm_mdl.predict(X_t)
+        print(f'Linear Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
+        print(f'Linear Kernel SVM Precision: {precision_score(y_p, y_t)}')
+        print(f'Linear Kernel SVM Recall: {recall_score(y_p, y_t)}')
+        print(f'Linear Kernel SVM F1 Score: {f1_score(y_p, y_t)}')
+        print('\n---------------**********---------------\n')
     
     if (args.trainRF):
-        random_forest(X_tr, y_tr, './saved_models/RF/rf.joblib')
+        random_forest(X_tr, y_tr, FP['RFMDL'])
+        
+        # Load Random Forest Classifier
+        rfc = load(FP['RFMDL'])
+        y_p = rfc.predict(X_t)
+        print(f'RFC Accuracy: {accuracy_score(y_p, y_t)}')
+        print(f'RFC Precision: {precision_score(y_p, y_t)}')
+        print(f'RFC Recall: {recall_score(y_p, y_t)}')
+        print(f'RFC F1: {f1_score(y_p, y_t)}')
+        print('\n---------------**********---------------\n')
 
     if (args.trainNN):
         train_ffnn(X_tr, y_tr, './saved_models/NN/FFNN1.joblib')
         test_ffnn(X_t, y_t, './saved_models/NN/FFNN1.joblib')
-
-    # Load Saved SVM models and measure accuracies
-    rbf_svm_mdl = load('./saved_models/SVM/rbf.joblib')
-    y_p = rbf_svm_mdl.predict(X_t)
-    print(f'RBF Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
-    print(f'RBF Kernel SVM Precision: {precision_score(y_p, y_t)}')
-    print(f'RBF Kernel SVM Recall: {recall_score(y_p, y_t)}')
-    print(f'RBF Kernel SVM F1: {f1_score(y_p, y_t)}')
-    print('\n---------------**********---------------\n')
-
-    linear_svm_mdl = load('./saved_models/SVM/linear.joblib')
-    y_p = linear_svm_mdl.predict(X_t)
-    print(f'Linear Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
-    print(f'Linear Kernel SVM Precision: {precision_score(y_p, y_t)}')
-    print(f'Linear Kernel SVM Recall: {recall_score(y_p, y_t)}')
-    print(f'Linear Kernel SVM F1 Score: {f1_score(y_p, y_t)}')
-    print('\n---------------**********---------------\n')
-
-    # Load Random Forest Classifier
-    rfc = load('./saved_models/RF/rf.joblib')
-    y_p = rfc.predict(X_t)
-    print(f'RFC Accuracy: {accuracy_score(y_p, y_t)}')
-    print(f'RFC Precision: {precision_score(y_p, y_t)}')
-    print(f'RFC Recall: {recall_score(y_p, y_t)}')
-    print(f'RFC F1: {f1_score(y_p, y_t)}')
-    print('\n---------------**********---------------\n')
 
     return 0
 

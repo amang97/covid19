@@ -1,11 +1,9 @@
 import tensorflow as tf
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-from numpy.random import seed
 from ..utilities.config import DP
 
-seed(DP['SEED'])
-tf.set_random_seed(DP['SEED'])
+tf.random.set_seed(DP['SEED'])
 
 def train_ffnn(X_tr, y_tr, model_name):
     [n, d] = X_tr.shape

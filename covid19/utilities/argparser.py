@@ -3,6 +3,10 @@ import argparse
 def parse_arguments():
     parser = argparse.ArgumentParser(description='')
 
+    parser.add_argument('--dataAnalytics',
+                        action='store_true',
+                        help='Prints SNR, ANOVA analysis, selected features')
+
     parser.add_argument('--trainNN',
                         action='store_true',
                         help='Trains a feed forward Neural NeT')
