@@ -3,6 +3,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 from .ml.svm import SVM
 from .ml.random_forest import random_forest
+from .ml.ffnn import train_ffnn, test_ffnn
 from .utilities.config import FP, DP
 from .data.data_loader import DataLoader
 from .data.data_analytics import DataAnalytics
@@ -41,6 +42,10 @@ def main():
     
     if (args.trainRF):
         random_forest(X_tr, y_tr, './saved_models/RF/rf.joblib')
+
+    if (args.trainNN):
+        train_ffnn(X_tr, y_tr, './saved_models/NN/FFNN1.joblib')
+        test_ffnn(X_t, y_t, './saved_models/NN/FFNN1.joblib')
 
     # Load Saved SVM models and measure accuracies
     rbf_svm_mdl = load('./saved_models/SVM/rbf.joblib')

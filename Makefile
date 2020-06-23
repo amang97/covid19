@@ -1,5 +1,6 @@
 all:
-	python3 -m covid19 --trainSVM --trainRF
+	\
+	python3 -m covid19 --trainSVM --trainRF;\
 
 install-dependencies:
 	\
@@ -7,8 +8,14 @@ install-dependencies:
 	pip3 install -r requirements.txt;\
 
 svm:
-	python3 -m covid19 --trainSVM
+	\
+	python3 -m covid19 --trainSVM;\
 
 rf:
-	python3 -m covid19 --trainRF
+	\
+	python3 -m covid19 --trainRF;\
+
+nn:
+	\
+	python3 -m covid19 --trainNN;\
 
