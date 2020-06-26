@@ -19,12 +19,15 @@ class DataAnalytics:
             Output -
                 empirical Probability estimate p_hat(y = 1)
         """
-        return self.y.sum()/self.y.count()
+        return round(self.y.sum()/self.y.count(), DP['ROUND'])
 
     def s2nr(self, confl):
         X0 = self.X.loc[(self.y.to_numpy() == 0), confl]
         X1 = self.X.loc[(self.y.to_numpy() == 1), confl]
-        return (abs(X0.mean() - X1.mean())).div((X0.std() + X1.std()))
+        py = self.p_y()
+        num = (X0.mean() - X1.mean())**2
+        denom = (1-py.values)*X0.var() + (py.values)*X1.var()
+        return (num).div(denom)
 
     def visualize(self, ll, fn):
         plt.figure()
@@ -33,7 +36,7 @@ class DataAnalytics:
         return None
 
     def correlation_matrix(self):
-        cor = self.data.corr()
+        cor = round(self.data.corr(), DP['ROUND'])
         cor.to_csv(FP['CORR'])
         return cor
     

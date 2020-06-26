@@ -13,11 +13,15 @@ data-analytics:
 
 svm:
 	\
+	python3 -m covid19 --trainSVM;\
+
+svm-data:
+	\
 	python3 -m covid19 --dataAnalytics --trainSVM;\
 
 rf:
 	\
-	python3 -m covid19 --dataAnalytics --trainRF;\
+	python3 -m covid19 --trainRF;\
 
 nn:
 	\
