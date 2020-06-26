@@ -17,11 +17,11 @@ DP['ROUND'] = 3
 DP['FL'] = ['adm_insulin', 'bmi', 'adm_nausea', 'arrival_o2therapy', 'sex',\
             'arrival_bps', 'adm_diarrhea', 'arrival_o2']
 DP['LL'] = ['icu_admission'] # ['intubation_status']
-DP['NUM_CON'] = 4
+DP['NUM_CON'] = 3
 DP['CON_FS_MODE'] = 'anova_f'
 DP['CONFL'] = ['age', 'arrival_temp', 'arrival_hr', 'arrival_rr', 'arrival_bps',\
             'arrival_bpd', 'arrival_o2','height', 'weight', 'bmi']
-DP['NUM_CAT'] = 8
+DP['NUM_CAT'] = 5
 DP['CAT_FS_MODE'] = 'chi2'
 DP['CATFL'] = [\
             'race',\
