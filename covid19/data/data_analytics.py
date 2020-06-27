@@ -46,7 +46,12 @@ class DataAnalytics:
         plt.xticks(rotation=45)
         plt.savefig(FP['COR_HMP'])
 
-    
+    # def chi2stat(self, catfl):
+    #     stats = chi2(self.X[catfl], np.ravel(self.y))
+    #     chi2vals = stats[0]
+    #     pvals = stats[1]
+    #     return chi2vals, pvals
+
     def select_features(self, catfl, confl, k_cat=None, k_con=None, cat_mode=None, con_mode=None): 
         """ Input -
                 catfl: (list) categorical features list of header names
@@ -77,7 +82,10 @@ class DataAnalytics:
                     - The array of index of features selected
             """
             fs = SelectKBest(score_func=chi2, k=k)
-            return fs.fit_transform(self.X[catfl], np.ravel(self.y)),\
+            fs.fit(self.X[catfl], np.ravel(self.y))
+            relevant_pvals = fs.pvalues_[fs.get_support(indices=True)]
+            print(f'categorical features pvalues: {-np.log10(relevant_pvals)}')
+            return fs.transform(self.X[catfl]),\
                     fs.get_support(indices=True)
         
         def mutual_info_selection(self, catfl=catfl, k=k_cat):
