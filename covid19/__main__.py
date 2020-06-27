@@ -11,8 +11,8 @@ from .data.data_analytics import DataAnalytics
 from .utilities.argparser import parse_arguments
 
 def tn(y_pred, y_true): return confusion_matrix(y_true, y_pred)[0, 0]
-def fn(y_pred, y_true): return confusion_matrix(y_true, y_pred)[1, 0]
-def specificity(y_pred, y_true): return round(tn(y_true, y_pred)/ (tn(y_true, y_pred) + fn(y_true, y_pred)), DP['ROUND'])
+def fp(y_pred, y_true): return confusion_matrix(y_true, y_pred)[0, 1]
+def specificity(y_pred, y_true): return round(tn(y_true, y_pred)/ (tn(y_true, y_pred) + fp(y_true, y_pred)), DP['ROUND'])
 
 def main():
     # Command line argument parsing
@@ -28,6 +28,7 @@ def main():
     if (args.dataAnalytics):
         # instantiate data analytics
         da = DataAnalytics(dl.data, X, y)
+        da.heatmap(DP['CONFL'])
 
         print(f'Number of data points in class 1: {da.p_y()}')
         print('\n---------------**********---------------\n')

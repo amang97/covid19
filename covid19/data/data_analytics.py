@@ -40,6 +40,13 @@ class DataAnalytics:
         cor.to_csv(FP['CORR'])
         return cor
     
+    def heatmap(self, fl):
+        plt.figure()
+        sns.heatmap(self.data[fl].corr(), annot=True, fmt='.1g', square=True)
+        plt.xticks(rotation=45)
+        plt.savefig(FP['COR_HMP'])
+
+    
     def select_features(self, catfl, confl, k_cat=None, k_con=None, cat_mode=None, con_mode=None): 
         """ Input -
                 catfl: (list) categorical features list of header names

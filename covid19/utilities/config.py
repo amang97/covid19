@@ -10,6 +10,7 @@ FP['RFIMG'] = './saved_models/RF/anova.png'
 FP['CAT_GRAPH'] = './cat_graph.png'
 FP['CON_GRAPH'] = './con_graph.png'
 FP['CORR'] = './corr.csv'
+FP['COR_HMP'] = './cor_hmp2.png'
 
 # Data Parameters
 DP = {}
