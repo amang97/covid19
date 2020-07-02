@@ -1,13 +1,16 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.feature_selection import SelectKBest, chi2, mutual_info_classif, f_classif
 
+from ..utilities.config import DP, FP
 class DataAnalytics:
-    def __init__(self, X, y):
+    def __init__(self, data, X, y):
         super().__init__()
         self.X = X
         self.y = y
+        self.data = data
     
     def p_y(self):
         """ Input - 
@@ -16,11 +19,39 @@ class DataAnalytics:
             Output -
                 empirical Probability estimate p_hat(y = 1)
         """
-        return self.y.sum()/self.y.count()
+        return round(self.y.sum()/self.y.count(), DP['ROUND'])
 
-    def correlation(self):
+    def s2nr(self, confl):
+        X0 = self.X.loc[(self.y.to_numpy() == 0), confl]
+        X1 = self.X.loc[(self.y.to_numpy() == 1), confl]
+        py = self.p_y()
+        num = (X0.mean() - X1.mean())**2
+        denom = (1-py.values)*X0.var() + (py.values)*X1.var()
+        return (num).div(denom)
+
+    def visualize(self, ll, fn):
+        plt.figure()
+        sns.pairplot(self.data[ll])
+        plt.savefig(fn)
         return None
+
+    def correlation_matrix(self):
+        cor = round(self.data.corr(), DP['ROUND'])
+        cor.to_csv(FP['CORR'])
+        return cor
     
+    def heatmap(self, fl):
+        plt.figure()
+        sns.heatmap(self.data[fl].corr(), annot=True, fmt='.1g', square=True)
+        plt.xticks(rotation=45)
+        plt.savefig(FP['COR_HMP'])
+
+    # def chi2stat(self, catfl):
+    #     stats = chi2(self.X[catfl], np.ravel(self.y))
+    #     chi2vals = stats[0]
+    #     pvals = stats[1]
+    #     return chi2vals, pvals
+
     def select_features(self, catfl, confl, k_cat=None, k_con=None, cat_mode=None, con_mode=None): 
         """ Input -
                 catfl: (list) categorical features list of header names
@@ -51,7 +82,10 @@ class DataAnalytics:
                     - The array of index of features selected
             """
             fs = SelectKBest(score_func=chi2, k=k)
-            return fs.fit_transform(self.X[catfl], np.ravel(self.y)),\
+            fs.fit(self.X[catfl], np.ravel(self.y))
+            relevant_pvals = fs.pvalues_[fs.get_support(indices=True)]
+            print(f'categorical features pvalues: {-np.log10(relevant_pvals)}')
+            return fs.transform(self.X[catfl]),\
                     fs.get_support(indices=True)
         
         def mutual_info_selection(self, catfl=catfl, k=k_cat):
@@ -68,10 +102,21 @@ class DataAnalytics:
                     fs.get_support(indices=True)
         
         def anova_f_selection(self, confl=confl, k=k_con):
+            """ Input -
+                    confl: (list) continuous label features headers list
+                    k: (int) number of features desired. default: All features
+                Output -
+                    - displays the graph of negative log p_values and prints the p_values too
+                    - X transformed with the best k categorical features based on 
+                    - The array of index of features selected based on one way ANOVA using
+                        the F statistic (consequently the p_values)
+            """
             fs = SelectKBest(score_func=f_classif, k=k)
             fs.fit(self.X[confl], np.ravel(self.y))
             scores = -np.log10(fs.pvalues_)
             scores /= scores.max()
+            print(f'p_values: {fs.pvalues_}')
+            print('\n---------------**********---------------\n')
             plt.figure()
             plt.bar(np.arange(self.X[confl].shape[1]) - .45, scores, width=.2,\
             label=r'Univariate score ($-Log(p_{value})$)')
@@ -80,7 +125,7 @@ class DataAnalytics:
             plt.yticks(())
             plt.axis('tight')
             plt.legend(loc='upper right')
-            # plt.show()
+            plt.savefig(FP['RFIMG'])
             return fs.transform(self.X[confl]), fs.get_support(indices=True)
         
         # Select Categorical Features
@@ -93,6 +138,6 @@ class DataAnalytics:
         if con_mode is 'anova_f':
             X_con, con_fs = anova_f_selection(self, confl, k_con)
 
-        print(X_cat.shape, X_con.shape)
+        # print(X_cat.shape, X_con.shape)
         return np.concatenate((X_cat, X_con), axis=1),\
                 [cat_fs, con_fs]

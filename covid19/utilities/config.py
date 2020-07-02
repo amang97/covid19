@@ -5,14 +5,25 @@ FP['DATA'] = './../../../Desktop/mngo/research/covid19/COVID_machine_learning_pr
 # Saved Models
 FP['SVM_RBF'] = './saved_models/SVM/rbf.joblib'
 FP['SVM_LINEAR'] = './saved_models/SVM/linear.joblib'
+FP['RFMDL'] = './saved_models/RF/rf.joblib'
+FP['RFIMG'] = './saved_models/RF/anova.png'
+FP['CAT_GRAPH'] = './cat_graph.png'
+FP['CON_GRAPH'] = './con_graph.png'
+FP['CORR'] = './corr.csv'
+FP['COR_HMP'] = './cor_hmp2.png'
 
 # Data Parameters
 DP = {}
+DP['ROUND'] = 3
 DP['FL'] = ['adm_insulin', 'bmi', 'adm_nausea', 'arrival_o2therapy', 'sex',\
             'arrival_bps', 'adm_diarrhea', 'arrival_o2']
 DP['LL'] = ['icu_admission'] # ['intubation_status']
+DP['NUM_CON'] = 3
+DP['CON_FS_MODE'] = 'anova_f'
 DP['CONFL'] = ['age', 'arrival_temp', 'arrival_hr', 'arrival_rr', 'arrival_bps',\
             'arrival_bpd', 'arrival_o2','height', 'weight', 'bmi']
+DP['NUM_CAT'] = 5
+DP['CAT_FS_MODE'] = 'chi2'
 DP['CATFL'] = [\
             'race',\
             'ethnicgroup',\
