@@ -19,38 +19,40 @@ class DataAnalytics:
             Output -
                 empirical Probability estimate p_hat(y = 1)
         """
-        return round(self.y.sum()/self.y.count(), DP['ROUND'])
+        return round((self.y.sum()/self.y.count()).squeeze(), DP['ROUND'])
 
     def s2nr(self, confl):
         X0 = self.X.loc[(self.y.to_numpy() == 0), confl]
         X1 = self.X.loc[(self.y.to_numpy() == 1), confl]
         py = self.p_y()
         num = (X0.mean() - X1.mean())**2
-        denom = (1-py.values)*X0.var() + (py.values)*X1.var()
+        denom = (1-py)*X0.var() + (py)*X1.var()
         return (num).div(denom)
 
-    def visualize(self, ll, fn):
-        plt.figure()
-        sns.pairplot(self.data[ll])
-        plt.savefig(fn)
-        return None
+    def univariate_bayes_error(self, catfl):
+        ube_scores = []
+        p1 = self.p_y()
+        p0 = 1 - p1
 
-    def correlation_matrix(self):
-        cor = round(self.data.corr(), DP['ROUND'])
-        cor.to_csv(FP['CORR'])
-        return cor
-    
-    def heatmap(self, fl):
-        plt.figure()
-        sns.heatmap(self.data[fl].corr(), annot=True, fmt='.1g', square=True)
-        plt.xticks(rotation=45)
-        plt.savefig(FP['COR_HMP'])
+        for i, catf in enumerate(catfl):
+            categories = self.X[catf].unique()
+            if (len(categories) == 1):
+                ube_scores.append(-1)
+                continue
 
-    # def chi2stat(self, catfl):
-    #     stats = chi2(self.X[catfl], np.ravel(self.y))
-    #     chi2vals = stats[0]
-    #     pvals = stats[1]
-    #     return chi2vals, pvals
+            X0 = self.X.loc[(self.y.to_numpy() == 0), catf]
+            X1 = self.X.loc[(self.y.to_numpy() == 1), catf]
+            n0 = X0.shape[0]
+            n1 = X1.shape[0]
+
+            ube = 0
+            for cat in categories:
+                pX_p0givenX = p0 * ((X0.loc[(X0 == cat)].shape[0])/n0)
+                pX_p1givenX = p1 * ((X1.loc[(X1 == cat)].shape[0])/n1)
+                ube += max(pX_p0givenX, pX_p1givenX)
+            ube_scores.append(round(ube, DP['ROUND']))
+        return ube_scores
+                
 
     def select_features(self, catfl, confl, k_cat=None, k_con=None, cat_mode=None, con_mode=None): 
         """ Input -
@@ -117,6 +119,7 @@ class DataAnalytics:
             scores /= scores.max()
             print(f'p_values: {fs.pvalues_}')
             print('\n---------------**********---------------\n')
+
             plt.figure()
             plt.bar(np.arange(self.X[confl].shape[1]) - .45, scores, width=.2,\
             label=r'Univariate score ($-Log(p_{value})$)')
@@ -127,17 +130,57 @@ class DataAnalytics:
             plt.legend(loc='upper right')
             plt.savefig(FP['RFIMG'])
             return fs.transform(self.X[confl]), fs.get_support(indices=True)
-        
+
+        def snr_selection(self, confl=confl, k=k_con):
+            snr_scores = self.s2nr(confl)
+            features_index = range(len(confl))
+            sorted_snr = sorted(snr_scores, reverse=True)
+            best_features = [x for _,x in sorted(zip(snr_scores,confl), reverse=True)]
+            best_features_index = [x for _,x in sorted(zip(snr_scores,features_index), reverse=True)]
+            X_conf = self.X[confl].reindex(best_features)
+            return X_conf[best_features[:k]], best_features_index[:k]
+
+        def ube_selection(self, catfl=catfl, k=k_cat):
+            ube_scores = self.univariate_bayes_error(confl)
+            features_index = range(len(catfl))
+            sorted_ube = sorted(ube_scores, reverse=True)
+            best_features = [x for _,x in sorted(zip(ube_scores,catfl), reverse=True)]
+            best_features_index = [x for _,x in sorted(zip(ube_scores,features_index), reverse=True)]
+            X_catf = self.X[catfl].reindex(best_features)
+            return X_catf[best_features[:k]], best_features_index[:k]
+
         # Select Categorical Features
         if cat_mode is 'chi2':
             X_cat, cat_fs = chi_square_selection(self, catfl, k_cat)
         elif cat_mode is 'mi':
             X_cat, cat_fs = mutual_info_selection(self, catfl, k_cat)
+        elif cat_mode is 'ube':
+            X_cat, cat_fs = ube_selection(self, catfl, k_cat)
 
         # Select Continuous features
         if con_mode is 'anova_f':
             X_con, con_fs = anova_f_selection(self, confl, k_con)
+        elif con_mode is 'snr':
+            X_con, con_fs = snr_selection(self, confl, k_con)
 
         # print(X_cat.shape, X_con.shape)
         return np.concatenate((X_cat, X_con), axis=1),\
                 [cat_fs, con_fs]
+
+    def visualize(self, ll, fn):
+        plt.figure()
+        sns.pairplot(self.data[ll])
+        plt.savefig(fn)
+        return None
+
+    def correlation_matrix(self):
+        cor = round(self.data.corr(), DP['ROUND'])
+        cor.to_csv(FP['CORR'])
+        return cor
+    
+    def heatmap(self, fl):
+        plt.figure()
+        sns.heatmap(self.data[fl].corr(), annot=True, fmt='.1g', square=True)
+        plt.xticks(rotation=45)
+        plt.savefig(FP['COR_HMP'])
+
