@@ -52,7 +52,6 @@ class DataAnalytics:
                 ube += max(pX_p0givenX, pX_p1givenX)
             ube_scores.append(round(ube, DP['ROUND']))
         return ube_scores
-                
 
     def select_features(self, catfl, confl, k_cat=None, k_con=None, cat_mode=None, con_mode=None): 
         """ Input -
@@ -164,8 +163,7 @@ class DataAnalytics:
             X_con, con_fs = snr_selection(self, confl, k_con)
 
         # print(X_cat.shape, X_con.shape)
-        return np.concatenate((X_cat, X_con), axis=1),\
-                [cat_fs, con_fs]
+        return np.concatenate((X_cat, X_con), axis=1), [cat_fs, con_fs]
 
     def visualize(self, ll, fn):
         plt.figure()
