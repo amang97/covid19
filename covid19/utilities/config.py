@@ -7,10 +7,10 @@ FP['SVM_RBF'] = './saved_models/SVM/rbf.joblib'
 FP['SVM_LINEAR'] = './saved_models/SVM/linear.joblib'
 FP['RFMDL'] = './saved_models/RF/rf.joblib'
 FP['RFIMG'] = './saved_models/RF/anova.png'
-FP['CAT_GRAPH'] = './results/miscellaneous/cat_graph.png'
-FP['CON_GRAPH'] = './results/miscellaneous/con_graph.png'
 FP['CORR'] = './results/correlation/corr.csv'
 FP['COR_HMP'] = './results/correlation/cor_hmp.png'
+FP['SNR'] = './results/snr/snr_fs.png'
+FP['UBE'] = './results/ube/ube_fs.png'
 
 # Data Parameters
 DP = {}

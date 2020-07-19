@@ -136,16 +136,36 @@ class DataAnalytics:
             sorted_snr = sorted(snr_scores, reverse=True)
             best_features = [x for _,x in sorted(zip(snr_scores,confl), reverse=True)]
             best_features_index = [x for _,x in sorted(zip(snr_scores,features_index), reverse=True)]
-            X_conf = self.X[confl].reindex(best_features)
+            
+            # Plot results
+            plt.figure()
+            plt.bar(best_features, sorted_snr, width=.2, label=r'SNR Values')
+            plt.xticks(rotation=45)
+            plt.axis('tight')
+            plt.legend(loc='upper right')
+            plt.savefig(FP['SNR'])
+
+            # transform and return the data
+            X_conf = self.X[confl].reindex(columns=best_features)
             return X_conf[best_features[:k]], best_features_index[:k]
 
         def ube_selection(self, catfl=catfl, k=k_cat):
-            ube_scores = self.univariate_bayes_error(confl)
+            ube_scores = self.univariate_bayes_error(catfl)
             features_index = range(len(catfl))
             sorted_ube = sorted(ube_scores, reverse=True)
             best_features = [x for _,x in sorted(zip(ube_scores,catfl), reverse=True)]
             best_features_index = [x for _,x in sorted(zip(ube_scores,features_index), reverse=True)]
-            X_catf = self.X[catfl].reindex(best_features)
+
+            # Plot results
+            plt.figure()
+            plt.bar(best_features, sorted_ube, label=r'UBE Scores')
+            plt.xticks(rotation=45)
+            plt.axis('tight')
+            plt.legend(loc='upper right')
+            plt.savefig(FP['UBE'])
+
+            # transform and return the data
+            X_catf = self.X[catfl].reindex(columns=best_features)
             return X_catf[best_features[:k]], best_features_index[:k]
 
         # Select Categorical Features

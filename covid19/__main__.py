@@ -42,7 +42,7 @@ def main():
         # print('\n---------------**********---------------\n')
 
         print(f'UBE for categorical variables:\n')
-        print(da.univariate_bayes_error(DP['CATFL']))
+        # print(da.univariate_bayes_error(DP['CATFL']))
         print('\n---------------**********---------------\n')
 
         X_fs, fs = da.select_features(DP['CATFL'], DP['CONFL'],\
@@ -56,9 +56,6 @@ def main():
         print(f'\nSelected Numerical Features:')
         print(np.array(DP['CONFL'])[fs[1]])
         print('\n---------------**********---------------\n')
-
-    #     da.visualize(np.array(DP['CATFL'])[fs[0]], FP['CAT_GRAPH'])
-    #     da.visualize(np.array(DP['CONFL'])[fs[1]], FP['CON_GRAPH'])
 
     # # Stratified Splitting of the dataset
     # X_tr, X_t, y_tr, y_t = dl.stratified_split(X_fs, y, DP['SR'], DP['SEED'])
