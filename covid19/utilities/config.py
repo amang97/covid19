@@ -23,7 +23,7 @@ DP['CON_FS_MODE'] = 'snr'
 DP['CONFL'] = ['age', 'arrival_temp', 'arrival_hr', 'arrival_rr', 'arrival_bps',\
             'arrival_bpd', 'arrival_o2','height', 'weight', 'bmi']
 DP['NUM_CAT'] = 5
-DP['CAT_FS_MODE'] = 'ube'
+DP['CAT_FS_MODE'] = 'chi2'
 DP['CATFL'] = [\
             'race',\
             'ethnicgroup',\

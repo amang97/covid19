@@ -30,16 +30,16 @@ def main():
         da = DataAnalytics(dl.data, X, y)
         da.heatmap(DP['CONFL'])
 
-        # print(f'Number of data points in class 1: {da.p_y()}')
-        # print('\n---------------**********---------------\n')
+        print(f'Number of data points in class 1: {da.p_y()}')
+        print('\n---------------**********---------------\n')
 
         # # print(f'Auto Correlation Matrix: {da.correlation_matrix()}')
         # # print('\n---------------**********---------------\n')
 
 
-        # print(f'SNR for numerical variables:\n')
-        # print(da.s2nr(confl=DP['CONFL']))
-        # print('\n---------------**********---------------\n')
+        print(f'SNR for numerical variables:\n')
+        print(da.s2nr(confl=DP['CONFL']))
+        print('\n---------------**********---------------\n')
 
         print(f'UBE for categorical variables:\n')
         # print(da.univariate_bayes_error(DP['CATFL']))
@@ -57,49 +57,53 @@ def main():
         print(np.array(DP['CONFL'])[fs[1]])
         print('\n---------------**********---------------\n')
 
-    # # Stratified Splitting of the dataset
-    # X_tr, X_t, y_tr, y_t = dl.stratified_split(X_fs, y, DP['SR'], DP['SEED'])
-    # print(X_tr.shape, X_t.shape)
+    # Stratified Splitting of the dataset
+    X_tr, X_t, y_tr, y_t = dl.stratified_split(X_fs, y, DP['SR'], DP['SEED'])
+    print(X_tr.shape, X_t.shape)
 
-    # if (args.trainSVM):
-    #     SVM(X_tr, y_tr, 'rbf', FP['SVM_RBF'])
-    #     SVM(X_tr, y_tr, 'linear', FP['SVM_LINEAR'])
+    if (args.trainSVM):
+        SVM(X_tr, y_tr, 'rbf', FP['SVM_RBF'])
+        SVM(X_tr, y_tr, 'linear', FP['SVM_LINEAR'])
+        print("training SVM completed")
 
-    # # Load Saved SVM models and evaluate model
-    # rbf_svm_mdl = load(FP['SVM_RBF'])
-    # y_p = rbf_svm_mdl.predict(X_t)
-    # print(f'RBF Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
-    # print(f'RBF Kernel SVM Precision: {round(precision_score(y_p, y_t),3)}')
-    # print(f'RBF Kernel SVM Sensitivity/Recall: {round(recall_score(y_p, y_t),3)}')
-    # print(f'RBF Kernel SVM Specificity/Selectivity: {specificity(y_p, y_t)}')
-    # print(f'RBF Kernel SVM F1: {round(f1_score(y_p, y_t),3)}')
-    # print('\n---------------**********---------------\n')
+    if (args.testSVM):
+        # Load Saved SVM models and evaluate model
+        rbf_svm_mdl = load(FP['SVM_RBF'])
+        y_p = rbf_svm_mdl.predict(X_t)
+        print(f'RBF Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
+        print(f'RBF Kernel SVM Precision: {round(precision_score(y_p, y_t),3)}')
+        print(f'RBF Kernel SVM Sensitivity/Recall: {round(recall_score(y_p, y_t),3)}')
+        print(f'RBF Kernel SVM Specificity/Selectivity: {specificity(y_p, y_t)}')
+        print(f'RBF Kernel SVM F1: {round(f1_score(y_p, y_t),3)}')
+        print('\n---------------**********---------------\n')
 
-    # linear_svm_mdl = load(FP['SVM_LINEAR'])
-    # y_p = linear_svm_mdl.predict(X_t)
-    # print(f'Linear Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
-    # print(f'Linear Kernel SVM Precision: {round(precision_score(y_p, y_t),3)}')
-    # print(f'Linear Kernel SVM Sensitivity/Recall: {round(recall_score(y_p, y_t),3)}')
-    # print(f'Linear Kernel SVM Specificity/Selectivity: {specificity(y_p, y_t)}')
-    # print(f'Linear Kernel SVM F1 Score: {round(f1_score(y_p, y_t),3)}')
-    # print('\n---------------**********---------------\n')
+        linear_svm_mdl = load(FP['SVM_LINEAR'])
+        y_p = linear_svm_mdl.predict(X_t)
+        print(f'Linear Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
+        print(f'Linear Kernel SVM Precision: {round(precision_score(y_p, y_t),3)}')
+        print(f'Linear Kernel SVM Sensitivity/Recall: {round(recall_score(y_p, y_t),3)}')
+        print(f'Linear Kernel SVM Specificity/Selectivity: {specificity(y_p, y_t)}')
+        print(f'Linear Kernel SVM F1 Score: {round(f1_score(y_p, y_t),3)}')
+        print('\n---------------**********---------------\n')
     
-    # if (args.trainRF):
-    #     feature_scores = random_forest(X_tr, y_tr, FP['RFMDL'])
+    if (args.trainRF):
+        feature_scores = random_forest(X_tr, y_tr, FP['RFMDL'])
+        print("RF training completed")
 
-    #     # Load Random Forest Classifier
-    #     rfc = load(FP['RFMDL'])
-    #     y_p = rfc.predict(X_t)
-    #     print(f'RFC Accuracy: {accuracy_score(y_p, y_t)}')
-    #     print(f'RFC Precision: {round(precision_score(y_p, y_t),3)}')
-    #     print(f'RFC Sensitivity/Recall: {round(recall_score(y_p, y_t),3)}')
-    #     print(f'RFC Specificity/Selectivity: {specificity(y_p, y_t)}')
-    #     print(f'RFC F1: {round(f1_score(y_p, y_t),3)}')
-    #     print('\n---------------**********---------------\n')
+    if (args.testRF):
+        # Load Random Forest Classifier
+        rfc = load(FP['RFMDL'])
+        y_p = rfc.predict(X_t)
+        print(f'RFC Accuracy: {accuracy_score(y_p, y_t)}')
+        print(f'RFC Precision: {round(precision_score(y_p, y_t),3)}')
+        print(f'RFC Sensitivity/Recall: {round(recall_score(y_p, y_t),3)}')
+        print(f'RFC Specificity/Selectivity: {specificity(y_p, y_t)}')
+        print(f'RFC F1: {round(f1_score(y_p, y_t),3)}')
+        print('\n---------------**********---------------\n')
 
-    # if (args.trainNN):
-    #     train_ffnn(X_tr, y_tr, './saved_models/NN/FFNN1.joblib')
-    #     test_ffnn(X_t, y_t, './saved_models/NN/FFNN1.joblib')
+    if (args.trainNN):
+        train_ffnn(X_tr, y_tr, './saved_models/NN/FFNN1.joblib')
+        test_ffnn(X_t, y_t, './saved_models/NN/FFNN1.joblib')
 
     return 0
 

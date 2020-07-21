@@ -153,6 +153,7 @@ class DataAnalytics:
             ube_scores = self.univariate_bayes_error(catfl)
             features_index = range(len(catfl))
             sorted_ube = sorted(ube_scores, reverse=True)
+            print(sorted_ube)
             best_features = [x for _,x in sorted(zip(ube_scores,catfl), reverse=True)]
             best_features_index = [x for _,x in sorted(zip(ube_scores,features_index), reverse=True)]
 
