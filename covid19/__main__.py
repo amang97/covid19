@@ -70,19 +70,19 @@ def main():
         # Load Saved SVM models and evaluate model
         rbf_svm_mdl = load(FP['SVM_RBF'])
         y_p = rbf_svm_mdl.predict(X_t)
-        print(f'RBF Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
+        print(f'RBF Kernel SVM Accuracy: {round(accuracy_score(y_p, y_t),3)}')
         print(f'RBF Kernel SVM Precision: {round(precision_score(y_p, y_t),3)}')
         print(f'RBF Kernel SVM Sensitivity/Recall: {round(recall_score(y_p, y_t),3)}')
-        print(f'RBF Kernel SVM Specificity/Selectivity: {specificity(y_p, y_t)}')
+        print(f'RBF Kernel SVM Specificity/Selectivity: {round(specificity(y_p, y_t),3)}')
         print(f'RBF Kernel SVM F1: {round(f1_score(y_p, y_t),3)}')
         print('\n---------------**********---------------\n')
 
         linear_svm_mdl = load(FP['SVM_LINEAR'])
         y_p = linear_svm_mdl.predict(X_t)
-        print(f'Linear Kernel SVM Accuracy: {accuracy_score(y_p, y_t)}')
+        print(f'Linear Kernel SVM Accuracy: {round(accuracy_score(y_p, y_t),3)}')
         print(f'Linear Kernel SVM Precision: {round(precision_score(y_p, y_t),3)}')
         print(f'Linear Kernel SVM Sensitivity/Recall: {round(recall_score(y_p, y_t),3)}')
-        print(f'Linear Kernel SVM Specificity/Selectivity: {specificity(y_p, y_t)}')
+        print(f'Linear Kernel SVM Specificity/Selectivity: {round(specificity(y_p, y_t),3)}')
         print(f'Linear Kernel SVM F1 Score: {round(f1_score(y_p, y_t),3)}')
         print('\n---------------**********---------------\n')
     
@@ -94,10 +94,10 @@ def main():
         # Load Random Forest Classifier
         rfc = load(FP['RFMDL'])
         y_p = rfc.predict(X_t)
-        print(f'RFC Accuracy: {accuracy_score(y_p, y_t)}')
+        print(f'RFC Accuracy: {round(accuracy_score(y_p, y_t),3)}')
         print(f'RFC Precision: {round(precision_score(y_p, y_t),3)}')
         print(f'RFC Sensitivity/Recall: {round(recall_score(y_p, y_t),3)}')
-        print(f'RFC Specificity/Selectivity: {specificity(y_p, y_t)}')
+        print(f'RFC Specificity/Selectivity: {round(specificity(y_p, y_t),3)}')
         print(f'RFC F1: {round(f1_score(y_p, y_t),3)}')
         print('\n---------------**********---------------\n')
 
