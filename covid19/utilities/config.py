@@ -26,7 +26,7 @@ DP['CONFL'] = ['age', 'arrival_temp', 'arrival_hr', 'arrival_rr', 'arrival_bps',
 DP['NUM_CAT'] = 9 # total number of features selected
 DP['NUM_FS_FIXED'] = 2 # Number of fixed features
 DP['NUM_FS_COMB'] = 3 # (cannot be 0) n = NUM_CAT - NUM_FS_FIXED, r = NUM_FS_COMB, decides nCr
-DP['CAT_FS_MODE'] = 'chi2'
+DP['CAT_FS_MODE'] = 'ube'
 DP['CATFL'] = [\
             'race',\
             'ethnicgroup',\

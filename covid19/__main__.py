@@ -63,6 +63,7 @@ def main():
         print('\n---------------**********---------------\n')
 
         print(f'\nSelected Numerical Features:')
+        print(fs[1])
         print(np.array(DP['CONFL'])[fs[1]])
         print('\n---------------**********---------------\n')
 

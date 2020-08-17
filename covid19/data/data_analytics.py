@@ -147,7 +147,7 @@ class DataAnalytics:
 
             # transform and return the data
             best_feature_cols = [confl[i] for i in sorted(best_features_index[:k])]
-            return self.X[best_feature_cols], best_features_index[:k]
+            return self.X[best_feature_cols], sorted(best_features_index[:k])
 
         def ube_selection(self, catfl=catfl, k=k_cat):
             ube_scores = self.univariate_bayes_error(catfl)
@@ -167,7 +167,7 @@ class DataAnalytics:
 
             # transform and return the data
             best_feature_cols = [catfl[i] for i in sorted(best_features_index[:k])]
-            return self.X[best_feature_cols], best_features_index[:k]
+            return self.X[best_feature_cols], sorted(best_features_index[:k])
 
         # Select Categorical Features
         if cat_mode is 'chi2':
