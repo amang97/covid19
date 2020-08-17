@@ -9,4 +9,4 @@ def random_forest(X_tr, y_tr, model_name):
                                     class_weight='balanced')
     rfc_mdl = rfc.fit(X_tr, y_tr)
     dump(rfc_mdl, model_name)
-    return None
+    return rfc_mdl.feature_importances_

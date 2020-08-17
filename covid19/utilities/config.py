@@ -3,15 +3,16 @@ FP = {}
 FP['DATA'] = './../../../Desktop/mngo/research/covid19/COVID_machine_learning_project/Data_and_data_dictionary/5.29.2020/COVID19RiskFactors-raw data_2020.5.29.csv'
 
 # Saved Models
-FP['SVM_RBF'] = './saved_models/SVM/rbf.joblib'
-FP['SVM_LINEAR'] = './saved_models/SVM/linear.joblib'
-FP['RFMDL'] = './saved_models/RF/rf.joblib'
+FP['MODEL_EXT'] = '.joblib'
+FP['SVM_RBF'] = './saved_models/SVM/rbf'
+FP['SVM_LINEAR'] = './saved_models/SVM/linear'
+FP['RFMDL'] = './saved_models/RF/rf'
 FP['RFIMG'] = './saved_models/RF/anova.png'
-FP['CAT_GRAPH'] = './cat_graph.png'
-FP['CON_GRAPH'] = './con_graph.png'
-FP['CORR'] = './corr.csv'
-FP['COR_HMP'] = './cor_hmp2.png'
-
+FP['CORR'] = './results/correlation/corr.csv'
+FP['COR_HMP'] = './results/correlation/cor_hmp.png'
+FP['SNR'] = './results/snr/snr_fs.png'
+FP['UBE'] = './results/ube/ube_fs.png'
+FP['METRICS'] = './results/metrics/'
 # Data Parameters
 DP = {}
 DP['ROUND'] = 3
@@ -19,11 +20,13 @@ DP['FL'] = ['adm_insulin', 'bmi', 'adm_nausea', 'arrival_o2therapy', 'sex',\
             'arrival_bps', 'adm_diarrhea', 'arrival_o2']
 DP['LL'] = ['icu_admission'] # ['intubation_status']
 DP['NUM_CON'] = 3
-DP['CON_FS_MODE'] = 'anova_f'
+DP['CON_FS_MODE'] = 'snr'
 DP['CONFL'] = ['age', 'arrival_temp', 'arrival_hr', 'arrival_rr', 'arrival_bps',\
             'arrival_bpd', 'arrival_o2','height', 'weight', 'bmi']
-DP['NUM_CAT'] = 5
-DP['CAT_FS_MODE'] = 'chi2'
+DP['NUM_CAT'] = 9 # total number of features selected
+DP['NUM_FS_FIXED'] = 2 # Number of fixed features
+DP['NUM_FS_COMB'] = 3 # (cannot be 0) n = NUM_CAT - NUM_FS_FIXED, r = NUM_FS_COMB, decides nCr
+DP['CAT_FS_MODE'] = 'ube'
 DP['CATFL'] = [\
             'race',\
             'ethnicgroup',\

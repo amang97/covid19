@@ -3,6 +3,15 @@ import argparse
 def parse_arguments():
     parser = argparse.ArgumentParser(description='')
 
+    parser.add_argument('--testSVM',
+                        action='store_true',
+                        help='tests saved model')
+
+    parser.add_argument('--testRF',
+                        action='store_true',
+                        help='tests saved rf model')
+
+
     parser.add_argument('--dataAnalytics',
                         action='store_true',
                         help='Prints SNR, ANOVA analysis, selected features')
